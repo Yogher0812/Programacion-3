@@ -11,8 +11,12 @@ const verifyToken = (req, res, next) => {
             });
         }
 
+        if (!process.env.JWT_SECRET) {
+            console.error('CRITICAL: JWT_SECRET no esta definida en el middleware de auth');
+        }
+
         const token = authHeader.substring(7);
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_only_for_debug');
 
         req.user = {
             id: decoded.id,
